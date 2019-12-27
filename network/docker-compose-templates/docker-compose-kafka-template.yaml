@@ -1,0 +1,80 @@
+# Copyright NDS Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+networks:
+  default:
+
+services:
+
+  zookeeperHOST_ID.DOMAIN:
+    container_name: zookeeperHOST_ID.DOMAIN
+    hostname: zookeeperHOST_ID.DOMAIN
+    image: hyperledger/fabric-zookeeper:$IMAGE_TAG
+    restart: always
+    environment:
+      # ZOOKEEPER_CLIENT_PORT: 32181    # 추가
+      # ZOOKEEPER_TICK_TIME: 2000    # 추가
+      - ZOO_MY_ID=HOST_ID
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+      - TZ=Asia/Seoul
+    volumes:
+      - ./../artifacts/hosts/kafka_hosts:/etc/hosts
+    ports:
+      - "ZOOKEEPER_PORT:2181"
+      - "2888:2888"
+      - "3888:3888"
+    networks:
+      - default
+    # extra_hosts:
+    #   - zookeeper1:IP1
+    #   - zookeeper2:IP2
+    #   - zookeeper3:IP3
+    #   - zookeeper4:IP4
+    #   - zookeeper5:IP5
+    #   - zookeeper6:IP6
+
+  kafkaHOST_ID.DOMAIN:
+    container_name: kafkaHOST_ID.DOMAIN
+    hostname: kafkaHOST_ID.DOMAIN
+    image: hyperledger/fabric-kafka:$IMAGE_TAG
+    restart: always
+    depends_on:
+    - zookeeperHOST_ID.DOMAIN
+    environment:
+      - KAFKA_BROKER_ID=HOST_ID
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:ZOOKEEPER_PORT,zookeeper2:ZOOKEEPER_PORT,zookeeper3:ZOOKEEPER_PORT
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafkaHOST_ID.DOMAIN:9092   # 추가
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1   # 추가
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_MIN_INSYNC_REPLICAS=2    # 기본 1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3    # 기본 1
+      - KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS=30000   #add
+      - KAFKA_ADVERTISED_HOST_NAME=MAIN_IP  #add
+      - KAFKA_ADVERTISED_PORT=9092  #add
+      - TZ=Asia/Seoul
+    volumes:
+      - ./../artifacts/hosts/kafka_hosts:/etc/hosts
+    ports:
+      - KAFKA_PORT:9092
+    networks:
+      - default
+    # extra_hosts:
+    #   - zookeeper1:IP1
+    #   - zookeeper2:IP2
+    #   - zookeeper3:IP3
+    #   - zookeeper4:IP4
+    #   - zookeeper5:IP5
+    #   - zookeeper6:IP6
+    #   - kafka1:IP1
+    #   - kafka2:IP2
+    #   - kafka3:IP3
+    #   - kafka4:IP4
+    #   - kafka5:IP5
+    #   - kafka6:IP6

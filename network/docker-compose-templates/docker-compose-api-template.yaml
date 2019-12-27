@@ -1,0 +1,43 @@
+# Copyright NDS Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+networks:
+  default:
+
+services:
+
+  # fabric-rest api server
+  api.MAIN_ORG.DOMAIN:
+    extends:
+      file: base/api-base.yaml
+      service: api-base
+    container_name: api.MAIN_ORG.DOMAIN
+    restart: always
+    ports:
+      - API_PORT:4000
+    environment:
+      - ORG=MAIN_ORG
+      - PORT=4000
+      - TZ=Asia/Seoul
+      - MODE=MODE_TYPE
+      - ./../artifacts/hosts/cli_hosts:/etc/hosts
+    networks:
+      - default
+    # extra_hosts:
+    #   - orderer.MAIN_ORG.DOMAIN:MAIN_IP
+    #   - peer0.ORG1.DOMAIN:IP1
+    #   - peer1.ORG1.DOMAIN:IP1
+    #   - peer0.ORG2.DOMAIN:IP2
+    #   - peer1.ORG2.DOMAIN:IP2
+    #   - peer0.ORG3.DOMAIN:IP3
+    #   - peer1.ORG3.DOMAIN:IP3
+    #   - peer0.ORG4.DOMAIN:IP4
+    #   - peer1.ORG4.DOMAIN:IP4
+    #   - peer0.ORG5.DOMAIN:IP5
+    #   - peer1.ORG5.DOMAIN:IP5
+    #   - peer0.ORG6.DOMAIN:IP6
+    #   - peer1.ORG6.DOMAIN:IP6

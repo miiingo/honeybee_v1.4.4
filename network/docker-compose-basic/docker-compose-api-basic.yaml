@@ -1,0 +1,28 @@
+# Copyright NDS Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+networks:
+  byfn:
+
+services:
+
+  # fabric-rest api server
+  api.org1.honeybee.com:
+    extends:
+      file: base/api-base.yaml
+      service: api-base
+    container_name: api.org1.honeybee.com
+    restart: always
+    ports:
+      - 4000:4000
+    environment:
+      - ORG=org1
+      - PORT=4000
+      - TZ=Asia/Seoul
+      - MODE=loc
+    networks:
+      - byfn

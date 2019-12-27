@@ -1,0 +1,11 @@
+"ORG": {
+    "peers": ["IP:7051"],
+    "peer": "peer0",
+    "channelID": "CHANNEL_NAME",
+    "chaincodeName": "CHAINCODE_NAME",
+    "fcn": "",
+    "username": "admin",
+    "org": "ORG",
+    "args": [],
+    "ipfs": "IP"
+  },}}

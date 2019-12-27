@@ -1,0 +1,7 @@
+  - Name: ORG
+    Domain: ORG.DOMAIN
+    EnableNodeOUs: true
+    Template:
+      Count: PEER_CNT
+    Users:
+      Count: 1

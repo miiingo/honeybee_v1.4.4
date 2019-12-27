@@ -1,0 +1,82 @@
+# Copyright NDS Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  orderer.MAIN_ORG.DOMAIN:
+    container_name: orderer.MAIN_ORG.DOMAIN
+    extends:
+      file: peer-base.yaml
+      service: orderer-base
+    volumes:
+      - ../../artifacts/channel-artifacts/honeybee-orderer-genesis.block:/var/hyperledger/orderer/honeybee-orderer-genesis.block
+      - ../../artifacts/crypto-config/ordererOrganizations/DOMAIN/orderers/orderer.MAIN_ORG.DOMAIN/msp:/var/hyperledger/orderer/msp
+      - ../../artifacts/crypto-config/ordererOrganizations/DOMAIN/orderers/orderer.MAIN_ORG.DOMAIN/tls:/var/hyperledger/orderer/tls
+      - ../../artifacts/hosts/orderer_hosts:/etc/hosts
+      - orderer.MAIN_ORG.DOMAIN:/var/hyperledger/production/orderer
+    ports:
+      - ORDERER_PORT:7050
+      - 8443:8443   # prometheus
+    # extra_hosts:
+    #   - kafka1:IP1
+    #   - kafka2:IP2
+    #   - kafka3:IP3
+    #   - kafka4:IP4
+    #   - kafka5:IP5
+    #   - kafka6:IP6
+
+
+  peer0.MAIN_ORG.DOMAIN:
+    container_name: peer0.MAIN_ORG.DOMAIN
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.MAIN_ORG.DOMAIN
+      - CORE_PEER_ADDRESS=peer0.MAIN_ORG.DOMAIN:PEER0_PORT
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:PEER0_PORT    # 추가
+      - CORE_PEER_CHAINCODEADDRESS=peer0.MAIN_ORG.DOMAIN.com:7052    # 추가
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052    # 추가
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.MAIN_ORG.DOMAIN:PEER1_PORT
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.MAIN_ORG.DOMAIN:PEER0_PORT
+      - CORE_PEER_LOCALMSPID=MAIN_ORGMSP
+    volumes:
+      - /var/run/:/host/var/run/
+      - ../../artifacts/crypto-config/peerOrganizations/MAIN_ORG.DOMAIN/peers/peer0.MAIN_ORG.DOMAIN/msp:/etc/hyperledger/fabric/msp
+      - ../../artifacts/crypto-config/peerOrganizations/MAIN_ORG.DOMAIN/peers/peer0.MAIN_ORG.DOMAIN/tls:/etc/hyperledger/fabric/tls
+      # - ../../artifacts/hosts/peer0_hosts:/etc/hosts
+      - ../../artifacts/hosts/peer_hosts:/etc/hosts
+      - peer0.MAIN_ORG.DOMAIN:/var/hyperledger/production
+    ports:
+      - PEER0_PORT:7051
+      - 9443:9443   # prometheus
+
+
+  peer1.MAIN_ORG.DOMAIN:
+    container_name: peer1.MAIN_ORG.DOMAIN
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.MAIN_ORG.DOMAIN
+      - CORE_PEER_ADDRESS=peer1.MAIN_ORG.DOMAIN:PEER1_PORT
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:PEER1_PORT    # 추가
+      - CORE_PEER_CHAINCODEADDRESS=peer1.MAIN_ORG.DOMAIN:7057    # 추가
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7057    # 추가
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.MAIN_ORG.DOMAIN:PEER1_PORT
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.MAIN_ORG.DOMAIN:PEER0_PORT
+      - CORE_PEER_LOCALMSPID=MAIN_ORGMSP
+    volumes:
+      - /var/run/:/host/var/run/
+      - ../../artifacts/crypto-config/peerOrganizations/MAIN_ORG.DOMAIN/peers/peer1.MAIN_ORG.DOMAIN/msp:/etc/hyperledger/fabric/msp
+      - ../../artifacts/crypto-config/peerOrganizations/MAIN_ORG.DOMAIN/peers/peer1.MAIN_ORG.DOMAIN/tls:/etc/hyperledger/fabric/tls
+      # - ../../artifacts/hosts/peer1_hosts:/etc/hosts
+      - ../../artifacts/hosts/peer_hosts:/etc/hosts
+      - peer1.MAIN_ORG.DOMAIN:/var/hyperledger/production
+    ports:
+      - PEER1_PORT:7051
+      - 9453:9443   # prometheus

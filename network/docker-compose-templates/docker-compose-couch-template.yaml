@@ -1,0 +1,68 @@
+# Copyright NDS Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+networks:
+  default:
+
+services:
+
+  couchdb0.ORG.DOMAIN:
+    container_name: couchdb0.ORG.DOMAIN
+    image: hyperledger/fabric-couchdb
+    restart: always
+    # COUCHDB_USER 및 COUCHDB_PASSWORD를 채워 CouchDB의 관리자 및 암호를 설정하십시오.
+    # 이렇게하면 CouchDB가 "Admin Party"모드에서 작동하지 않게됩니다.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+      - TZ=Asia/Seoul
+    # CouchDB 서비스를 숨기거나 드러내고 싶다면, 포트 매핑을 주석 처리/주석 해제하십시오. 
+    # 예를 들어 dev 환경에서 Fauxton User Interface를 사용하도록 매핑하십시오.
+    ports:
+      - "COUCHDB0_PORT:5984"
+    networks:
+      - default
+
+  peer0.ORG.DOMAIN:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb0.ORG.DOMAIN:5984
+      # CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME 및 CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD는 
+      # ledger가 CouchDB에 연결하는 데 필요한 자격 증명을 제공합니다.
+      # 사용자 이름과 암호는 연관된 CouchDB에 설정된 사용자 이름과 암호와 일치해야합니다.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    depends_on:
+      - couchdb0.ORG.DOMAIN
+
+  couchdb1.ORG.DOMAIN:
+    container_name: couchdb1.ORG.DOMAIN
+    image: hyperledger/fabric-couchdb
+    restart: always
+    # COUCHDB_USER 및 COUCHDB_PASSWORD를 채워 CouchDB의 관리자 및 암호를 설정하십시오.
+    # 이렇게하면 CouchDB가 "Admin Party"모드에서 작동하지 않게됩니다.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    # CouchDB 서비스를 숨기거나 드러내고 싶다면, 포트 매핑을 주석 처리/주석 해제하십시오.
+    # 예를 들어 dev 환경에서 Fauxton User Interface를 사용하도록 매핑하십시오.
+    ports:
+      - "COUCHDB1_PORT:5984"
+    networks:
+      - default
+
+  peer1.ORG.DOMAIN:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1.ORG.DOMAIN:5984
+      # CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME 및 CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD는 
+      # ledger가 CouchDB에 연결하는 데 필요한 자격 증명을 제공합니다.
+      # 사용자 이름과 암호는 연관된 CouchDB에 설정된 사용자 이름과 암호와 일치해야합니다.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    depends_on:
+      - couchdb1.ORG.DOMAIN

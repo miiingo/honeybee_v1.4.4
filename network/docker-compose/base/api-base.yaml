@@ -1,0 +1,16 @@
+# Copyright NDS Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  api-base:
+    image: honeyblock/fabric-ipfs-rest:0.2.2
+    volumes:
+     - ../../artifacts:/usr/src/artifacts
+     - ../../../chaincode:/opt/gopath/src/github.com/chaincode
+    #  - ../../../../../../../../../data/ipfs-cluster:/data/ipfs-cluster
+    command: sh -c "npm rebuild && npm start"

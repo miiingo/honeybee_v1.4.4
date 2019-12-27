@@ -1,0 +1,7 @@
+{
+	"network-config": {
+		"orderer": {
+			"url": "grpcs://MAIN_IP:7050",
+			"server-hostname": "orderer.MAIN_ORG.DOMAIN",
+			"tls_cacerts": "crypto-config/ordererOrganizations/DOMAIN/orderers/orderer.MAIN_ORG.DOMAIN/tls/ca.crt"
+		},}}

@@ -1,0 +1,21 @@
+"ORG": {
+    "name":  "peerORG",
+    "mspid": "ORGMSP",
+    "ca": "https://IP:7054",
+    "peer0": {
+        "requests": "grpcs://IP:7051",
+        "events": 	"grpcs://IP:7053",
+        "server-hostname": "peer0.ORG.DOMAIN",
+        "tls_cacerts": "crypto-config/peerOrganizations/ORG.DOMAIN/peers/peer0.ORG.DOMAIN/tls/ca.crt"
+    },
+    "peer1": {
+        "requests": "grpcs://IP:7056",
+        "events":   "grpcs://IP:7058",
+        "server-hostname": "peer1.ORG.DOMAIN",
+        "tls_cacerts": "crypto-config/peerOrganizations/ORG.DOMAIN/peers/peer1.ORG.DOMAIN/tls/ca.crt"
+    },
+    "admin": {
+        "key":  "crypto-config/peerOrganizations/ORG.DOMAIN/users/Admin@ORG.DOMAIN/msp/keystore",
+        "cert": "crypto-config/peerOrganizations/ORG.DOMAIN/users/Admin@ORG.DOMAIN/msp/signcerts"
+    }
+},}}
